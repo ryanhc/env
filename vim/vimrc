@@ -1,0 +1,42 @@
+" environment
+syntax on
+set encoding=utf-8
+filetype plugin indent on
+set autoindent
+set number
+set colorcolumn=80
+set laststatus=2
+set nowrap
+autocmd BufWritePre * :%s/\s\+$//e
+inoremap jk <ESC>
+
+" navigation
+set whichwrap+=<,>,h,l,[,]
+
+" tab
+set smarttab
+set tabstop=4 shiftwidth=4 expandtab
+inoremap <TAB> <C-f>
+
+" search
+set ignorecase
+set smartcase
+set incsearch
+set hlsearch
+:nnoremap <silent> <Space> :nohlsearch<Bar>:echo<CR>
+
+" control
+inoremap <C-h> <C-w>h
+inoremap <C-j> <C-w>j
+inoremap <C-k> <C-w>k
+inoremap <C-l> <C-w>l
+
+" spellchecking
+" set spell spellang=en_us
+
+"highlight Cursor guifg=white guibg=black
+"highlight iCursor guifg=white guibg=steelblue
+set guicursor=n-v-c:block-Cursor
+set guicursor+=i:ver100-iCursor
+set guicursor+=n-v-c:blinkon0
+set guicursor+=i:blinkwait10
