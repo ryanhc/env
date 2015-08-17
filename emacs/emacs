@@ -1,0 +1,888 @@
+;;///////////////////////////////////////////////////////////////
+;;//
+;;// Filename         : .emacs
+;;// Author           : Ryan H. Choi
+;;//
+;;///////////////////////////////////////////////////////////////
+
+;; ==================================================================
+;; == General Settings
+;; ==================================================================
+
+; To make del work in Linux
+(normal-erase-is-backspace-mode 1)
+
+; it seems like these two have to be in the custom-set-variables
+;(custom-set-variables
+; '(global-auto-revert-mode t)  ;we update the current file when the file is updated outside emacs
+;)
+(global-auto-revert-mode 1)
+
+;; line numbers
+(global-linum-mode 1)
+
+;; maps commands to control on mac
+(setq mac-command-modifier 'ctrl)
+
+;; Environment
+(add-to-list 'load-path "~/env/emacs/lib")
+
+(setq fill-column 80)              ;when to split lines
+;(mouse-wheel-mode t)                 ;enables a mouse with a wheel
+(setq next-line-add-newlines nil)  ;stop in last line of buffer
+(setq require-final-newline t)     ;always finishes a file with a newline
+(setq kill-whole-line t)           ;take the CR when killing a line
+(setq default-buffer-file-coding-system 'undecided-unix) ;unix style formating
+
+;; make searches case insensitive
+(setq case-fold-search nil)
+
+;; Set titles for frame and icon (%f == file name, %b == buffer name)
+(setq-default frame-title-format "Emacs: %f")
+(setq-default icon-title-format  "Emacs - %b")
+
+;; Open unidentified files in text mode
+(setq default-major-mode 'text-mode)
+
+;; Make all "yes or no" prompts show "y or n" instead
+(fset 'yes-or-no-p 'y-or-n-p)
+
+;; Don't wrap long lines.
+(setq-default truncate-lines t)  ;I hate when lines are wraped around
+
+;(setq visible-bell t)            ;Disable the cursed beep
+
+
+;; Text-mode ;;;;
+(add-hook 'text-mode-hook 'turn-on-auto-fill)
+
+;; What modes for what file extentions
+(setq auto-mode-alist (append '(("\\.h\\'" . c++-mode)
+                                ("\\.ml\\'" . caml-mode))
+                              auto-mode-alist))
+
+
+;(setq-default show-trailing-whitespace t) ;make trailing whitespace visible
+
+;(setq-default hscroll-margin 1)
+;(setq-default hscroll-step-percent 25)
+
+;; ===================================================================
+;; == Mac Specific
+;; ===================================================================
+;(setq mac-command-modifier 'meta)
+;(setq mac-pass-option-to-system nil)
+
+;; ===================================================================
+;; == Backup
+;; ===================================================================
+
+(setq make-backup-files nil)    ;don't make pesky backup files
+;(auto-save-mode 10)            ;auto-saving but it makes annoying #scratch files
+
+
+;; ===================================================================
+;; == Tabs
+;; ===================================================================
+
+;(setq-default default-tab-width 4) ;Bad idea to change this from 8.
+
+;; If this is not a multiple of tab-width, tabbing will insert spaces.
+(setq tab-stop-list '(4 8 12 16 20 24 28 32 36 40 44 48 52))
+(setq-default indent-tabs-mode nil)
+
+;; when on a TAB, the cursor has the TAB length
+;(setq-default x-stretch-cursor t)
+
+(setq c-basic-offset 4)          ;use 4 spaces for c indent
+
+;; Having both tabs and spaces are a bad idea. We treat \t as a single char
+(setq backward-delete-char-untabify-method nil)
+
+
+;; ===================================================================
+;; == Window Frame Positions
+;; ===================================================================
+
+(setq default-frame-alist
+      '((menu-bar-lines . 1)
+;        (top . 30) (left . 30)         ;; sets frames position
+;        (width . 80) (height . 30)	;; resize the emacs window
+;        (cursor-color . "orchid")
+;        (cursor-type . box)
+;        (foreground-color . "antique white")
+;        (background-color . "black")
+;        (vertical-scroll-bars . right)
+
+        ;; possible fonts -- uncomment if you want to use it
+        ;(font . "-*-Terminal-normal-r-*-*-8-60-*-*-c-*-*-oem-")
+        ;(font . "-*-Terminal-normal-r-*-*-12-72-*-*-c-80-*-oem-")
+        ;(font . "-*-Terminal-normal-r-*-*-8-60-*-*-c-*-*-oem-")
+        ;(font . "-*-Terminal-normal-r-*-*-19-142-*-*-c-*-*-oem-")
+        ;(font . "-*-Terminal-normal-r-*-*-12-72-*-*-c-80-fontset-msterminal12")
+
+        ;(font . "-*-Fixedsys-normal-r-*-*-12-*-*-*-c-*-fontset-standard")
+))
+
+
+;; ===================================================================
+;; == Settings for Menubar, Toolbar, Scrollbar and Modeline
+;; ===================================================================
+(setq inhibit-startup-message t)  ;Disable the cursed startup message
+(setq initial-scratch-message nil);Same for the message in the scratch buffer
+
+;(menu-bar-mode nil)              ;No, I do not like menus
+(tool-bar-mode -1)                ;The tool bar is useless
+
+;(setq-default scroll-step 1)      ;Uhhh... I hate the default behaviour
+;(setq-default hscroll-step 1)     ;Hate this as well
+;(setq scroll-bar-mode-explicit t) ;And I do not like scrollbar neither
+(set-scroll-bar-mode 'right)      ;==> I shifted the scrollbar to the right
+
+(line-number-mode 1)               ;show number of line
+(column-number-mode 1)             ;show number of column (origin 0)
+;(setq display-time-day-and-date t) ;display time and date
+;(setq display-time-12hr-format t)  ;time in 12 hour-mode
+;(display-time)                     ;show time
+;(display-battery)                  ;display APM information in the modeline
+;(which-func-mode t)               ;show current function in modeline
+
+
+;; ===================================================================
+;; == Cursor
+;; ===================================================================
+
+(blink-cursor-mode nil)          ;Disable the cursed blinking cursor
+;(set-default 'cursor-type 'box)   ;block cursor
+;; Do not show the cursor in non-active window
+;(setq-default cursor-in-non-selected-windows nil)
+
+
+
+;; ===================================================================
+;; == Highlighting
+;; ===================================================================
+(setq show-paren-delay 0.6)               ;I can wait for 0.6 seconds
+(setq show-paren-ring-bell-on-mismatch t) ;I like to make a noise
+(show-paren-mode t)                       ;matching parentheses
+
+;; highlight during query
+(setq query-replace-highlight t)
+
+;; highlight incremental search
+(setq search-highlight t)
+
+;Show me the region until I do something on it
+;(transient-mark-mode 't)
+
+;; highlight current line
+;(global-hl-line-mode 1)
+
+
+
+;; ===================================================================
+;; == Keyword highlighting for words such as FIXME, TODO
+;; ===================================================================
+(setq keyword-highlight-modes
+      '(php-mode java-mode c-mode c++-mode emacs-lisp-mode
+                 scheme-mode python-mode javascript-mode))
+
+(make-face 'font-lock-fixme-face)
+(make-face 'font-lock-todo-face)
+(make-face 'font-lock-note-face)
+
+(mapc (lambda (mode)
+        (font-lock-add-keywords
+         mode
+         '(("\\<\\(FIXME\\)" 1 'font-lock-fixme-face t))))
+      keyword-highlight-modes)
+
+(mapc (lambda (mode)
+        (font-lock-add-keywords
+         mode
+         '(("\\<\\(TODO\\)" 1 'font-lock-todo-face t))))
+      keyword-highlight-modes)
+
+(mapc (lambda (mode)
+        (font-lock-add-keywords
+         mode
+         '(("\\<\\(NOTE\\)" 1 'font-lock-note-face t))))
+      keyword-highlight-modes)
+
+
+
+(modify-face 'font-lock-fixme-face "black" "yellow" nil t nil t nil nil)
+(modify-face 'font-lock-todo-face "black" "yellow" nil t nil nil nil nil)
+(modify-face 'font-lock-note-face "black" "yellow" nil t nil nil nil nil)
+
+
+
+;; ===================================================================
+;; == Colours
+;; ===================================================================
+
+;; How can you live without colours???
+(require 'font-lock)
+;(require 'lazy-lock)
+(global-font-lock-mode t)       ;use colorization for all modes
+;(setq font-lock-support-mode 'lazy-lock-mode) ;fast fontification
+(setq font-lock-mode-maximum-decoration t);make code look like a christmas tree
+(setq font-lock-verbose t)
+
+;; I like to customise my own colours
+(set-cursor-color "orchid")             ;cursor colour
+(set-background-color "snow3")  ;background
+;(set-foreground-color "wheat")          ;text colour
+(set-face-background 'fringe "SteelBlue4")
+;(set-face-foreground 'modeline "DarkSlateGrey")
+;(set-face-background 'modeline "Wheat")
+;(set-face-background 'region "SkyBlue") ;highlight region colour
+
+(set-face-foreground 'font-lock-string-face "OrangeRed")   ;"string"
+(set-face-foreground 'font-lock-builtin-face "Deep Pink")  ;
+;(set-face-foreground 'font-lock-comment-face "OrangeRed")  ;comments
+;(set-face-foreground 'font-lock-keyword-face "BlueViolet") ;like for and while
+;(set-face-foreground 'font-lock-function-name-face "Blue") ;functions
+(set-face-foreground 'font-lock-variable-name-face "dark goldenrod") ;variables
+
+(make-face-bold 'font-lock-function-name-face)
+(make-face-bold 'font-lock-variable-name-face)
+
+;(set-face-foreground 'show-paren-match-face "blue")        ;paren
+;(set-face-background 'show-paren-match-face "cyan")        ;paren
+;(set-face-foreground 'show-paren-mismatch-face "white")    ;paren mismatch
+;(set-face-background 'show-paren-mismatch-face "purple")   ;paren mismatch
+
+
+
+
+
+
+
+;; ;; FACE FG BG bold italic underline.
+;; (setq font-lock-face-attributes
+;;       '((font-lock-builtin-face       "deep pink") ;LightSteelBlue
+;; ;        (font-lock-comment-face       "OrangeRed"     )
+;; ;        (font-lock-constant-face      "Aquamarine"    )
+;;         (font-lock-function-name-face "blue" nil t) ;LightSkyBlue
+;; ;        (font-lock-keyword-face       "BlueViolet" nil nil)
+;;         (font-lock-string-face        "OrangeRed"   ) ; aquamarine3
+;; ;        (font-lock-type-face          "PaleGreen"     )
+;;         (font-lock-variable-name-face "dark goldenrod" nil t);LightGoldenrod
+;; ;        (font-lock-warning-face       "pink" nil t    )
+;;         ))
+
+;;
+;; ;; This version allows multiple matches in any one line.
+;; (font-lock-add-keywords
+;;  'emacs-lisp-mode
+;;  '((";" ("\\<\\(GM\\|NB\\|TODO\\|FIXME\\)\\>"  nil nil
+;;          (0 'font-lock-warning-face t)))
+;;    (";" ("[* ]\\*[ \t]*\\(\\w.*\\)\\*" nil nil
+;;          (1 'font-lock-warning-face t)))))
+
+
+;; ===================================================================
+;; == Latex Settings
+;; ===================================================================
+
+
+(add-to-list 'load-path "/usr/local/share/emacs/site-lisp")
+(require 'tex-site)
+;(require 'predictive)
+(setq flyspell-issue-welcome-flag nil) ;;fix for Ubuntu 10.10 problem
+
+; auto save for latex
+(setq TeX-auto-save t)
+(setq TeX-parse-self t)
+(setq-default TeX-master nil) ;; to support master and multiple tex files
+(add-hook 'LaTeX-mode-hook 'visual-line-mode) ;; auto-fill-mode?
+
+;; add math mode for latex
+(add-hook 'LaTeX-mode-hook 'LaTeX-math-mode)
+;; automatically turn on spellcheck in Latex mode
+;(add-hook 'LaTeX-mode-hook 'flyspell-mode)
+(add-hook 'LaTeX-mode-hook 'turn-on-flyspell)
+(add-hook 'tex-mode-hook 'flyspell-mode)
+(add-hook 'bibtex-mode-hook 'flyspell-mode)
+
+(add-hook 'LaTeX-mode-hook 'turn-on-reftex)
+(setq reftex-plug-into-AUCTeX t)
+
+(load "auctex.el" nil t t)
+(load "preview-latex.el" nil t t)
+
+;(setq TeX-master (guess-TeX-master (buffer-file-name)))
+
+;(defun guess-TeX-master (filename)
+;  "Guess the master file for FILENAME from currently open .tex files."
+;  (let ((candidate nil)
+;        (filename (file-name-nondirectory filename)))
+;    (save-excursion
+;      (dolist (buffer (buffer-list))
+;        (with-current-buffer buffer
+;          (let ((name (buffer-name))
+;                (file buffer-file-name))
+;            (if (and file (string-match "\\.tex$" file))
+;                (progn
+;                  (goto-char (point-min))
+;                  (if (re-search-forward (concat "\\\\input{" filename "}") nil t)
+;                      (setq candidate file))
+;                  (if (re-search-forward (concat "\\\\include{" (file-name-sans-extension filename) "}") nil t)
+;                      (setq candidate file))))))))
+;    (if candidate
+;        (message "TeX master document: %s" (file-name-nondirectory candidate)))
+;    candidate))
+
+
+;; ===================================================================
+;; == Auto-complete
+;; ===================================================================
+
+;; To install auto-complete, download auto-complete package from
+;; http://cx4a.org/software/auto-complete/
+;; run make install and install the package to ~/.emacs.d
+(add-to-list 'load-path "~/env/emacs/lib/auto-complete")
+(require 'auto-complete-config)
+(add-to-list 'ac-dictionary-directories "~/.emacs.d/ac-dict")
+(ac-config-default)
+
+;;(add-hook 'java-mode-hook (lambda () (local-set-key (kbd "C-<tab>") 'java-complete)))
+
+;; ===================================================================
+;; == Windows-like selection and key bindings
+;; ===================================================================
+;; this package has to be loaded after cursor color and
+;; before pc-selection-mode to make it work correctly. Strange...
+(cua-mode t)
+(setq cua-auto-tabify-rectangles nil) ;; Don't tabify after rectangle commands
+(transient-mark-mode 1)               ;; No region when it is not highlighted
+(setq cua-keep-region-after-copy t)   ;; Standard Windows behaviour.
+;(pc-selection-mode)
+;(pc-bindings-mode)
+(delete-selection-mode 1)             ;; overwrite selection when typing
+
+;; ===================================================================
+;; == Spell checking
+;; ===================================================================
+(autoload 'flyspell-mode "flyspell" "On-the-fly spelling checking" t)
+(autoload 'global-flyspell-mode "flyspell" "On-the-fly spelling" t)
+
+;(global-flyspell-mode) ;; enable on-the-fly spelling check all the time
+;; ===================================================================
+;; == Key Bindings
+;; ===================================================================
+
+(global-set-key [f1] 'goto-line) ;goto line
+(global-set-key [f5] 'compile)   ;compile
+(global-set-key [f7] 'flyspell-mode)   ;on the fly spell checking
+(global-set-key [(meta f7)] 'ispell)   ;sequential spell checking
+
+;(global-set-key [(meta g)] 'goto-line)
+;(define-key c-mode-map [(f5)] 'compile)
+
+
+;; put back my keys, you thief!
+(global-set-key [home] 'beginning-of-line)
+(global-set-key [end] 'end-of-line)
+
+(global-set-key [C-home] 'beginning-of-buffer)
+(global-set-key [C-end] 'end-of-buffer)
+(global-set-key [C-tab] 'indent-using-tab)
+
+;; Shift-down comments the current line and goes down
+(define-key global-map [(meta down)] 'comment-and-go-down)
+;; Shift-up uncomments the current line and goes up
+(define-key global-map [(meta up)] 'uncomment-and-go-up)
+
+
+(define-key global-map [?\C-x right] 'next-buffer)
+(define-key global-map [?\C-x left] 'prev-buffer)
+
+;; ===================================================================
+;; == Using 3rd Party Packages
+;; ===================================================================
+
+
+
+;; ===================================================================
+;; == Useful Functions
+;; ===================================================================
+
+;; I like to remove trailing whitespaces when I save a file
+(add-hook 'write-file-hooks 'global-trim)
+
+;; removes all trailing whitespaces
+(defun global-trim ()
+  "Trim all trailing whitespace in the current buffer."
+  (interactive)
+  (save-excursion
+    (goto-char (point-min))
+    (while (re-search-forward "[ \t]+$" nil t)
+      (replace-match "" t t))))
+
+;;ASCII table function
+(defun ascii-table ()
+  "Print the ascii table. Based on a defun by Alex Schroeder <asc@bsiag.com>"
+  (interactive)  (switch-to-buffer "*ASCII*")  (erase-buffer)
+  (insert (format "ASCII characters up to number %d.\n" 254))
+  (let ((i 0))
+    (while (< i 254)
+      (setq i (+ i 1))
+      (insert (format "%4d %c\n" i i))))
+  (beginning-of-buffer))
+
+;; Removes tab with " "
+(defun tab-to-space ()
+  (interactive)
+  (goto-char (point-min))
+  (while (search-forward "\t" nil t)
+    (replace-match " ")))
+
+
+;;Convert DOS cr-lf to UNIX newline
+(defun dos-unix ()
+  (interactive)
+  (goto-char (point-min))
+  (while (search-forward "\r" nil t)
+    (replace-match "")))
+
+;;Convert UNIX newline to DOS cr-lf
+(defun unix-dos ()
+  (interactive)
+  (goto-char (point-min))
+  (while (search-forward "\n" nil t)
+    (replace-match "\r\n")))
+
+;; inserts a \t character
+(defun indent-using-tab ()
+   "Indent using a tab"
+   (interactive)
+;   (beginning-of-line)
+   (insert "\t")
+)
+
+;; Those functions exist in 21.3.5 by default
+(defun next-buffer ()
+      "Switch to the next buffer in cyclic order."
+      (interactive)
+      (let ((buffer (current-buffer)))
+        (switch-to-buffer (other-buffer buffer))
+        (bury-buffer buffer)))
+
+(defun prev-buffer ()
+      "Switch to the previous buffer in cyclic order."
+      (interactive)
+      (let ((list (nreverse (buffer-list)))
+            found)
+        (while (and (not found) list)
+          (let ((buffer (car list)))
+            (if (and (not (get-buffer-window buffer))
+                     (not (string-match "\\` " (buffer-name buffer))))
+                (setq found buffer)))
+          (setq list (cdr list)))
+        (switch-to-buffer found)))
+
+
+(defun comment-and-go-down ()
+  "Comments the current line and goes to the next one"
+  (interactive)
+  (condition-case nil
+      (comment-region
+       (point-at-bol)
+       (point-at-eol))
+    (error nil))
+  (next-line 1))
+
+(defun uncomment-and-go-up ()
+  "Uncomments the current line and goes to the previous one" (interactive)
+  (condition-case nil
+      (uncomment-region
+       (point-at-bol)
+       (point-at-eol))
+    (error nil))
+  (next-line -1))
+
+
+;; ;; Added to options menu.
+;; (defun my-toggle-trailing-whitespace ()
+;;   "Toggle display of trailing whitespace."
+;;   (interactive)
+;;   (if (not (boundp 'show-trailing-whitespace))
+;;       (message "whitespace mode not available")
+;; ;;;     (make-local-variable 'show-trailing-whitespace)
+;;     (setq show-trailing-whitespace (not show-trailing-whitespace))
+;;     (redraw-display)          ; redraws everything, not just current buffer
+;;     (if show-trailing-whitespace (message "whitespace mode enabled")
+;;       (message "whitespace mode disabled"))))
+
+
+
+;; ===================================================================
+;; == Additional Language Support
+;; ===================================================================
+
+;; ######################
+;; ## Adds C++ Mode
+;; ######################
+(setq auto-mode-alist
+      (cons '("\\.tem$" . c++-mode) auto-mode-alist))
+
+;; ######################
+;; ## Adds Haskell Mode
+;; ######################
+(setq auto-mode-alist
+    (append auto-mode-alist
+         '(("\\.[hg]s$"  . haskell-mode)
+           ("\\.hi$"     . haskell-mode)
+           ("\\.l[hg]s$" . literate-haskell-mode))))
+(autoload 'haskell-mode "haskell-mode"
+   "Major mode for editing Haskell scripts." t)
+(autoload 'literate-haskell-mode "haskell-mode"
+   "Major mode for editing literate Haskell scripts." t)
+
+;;adding the following lines according to which modules you want to use:
+(add-hook 'haskell-mode-hook 'turn-on-haskell-font-lock)
+(add-hook 'haskell-mode-hook 'turn-on-haskell-decl-scan)
+(add-hook 'haskell-mode-hook 'turn-on-haskell-doc-mode)
+;;(add-hook 'haskell-mode-hook 'turn-on-haskell-indent)
+(add-hook 'haskell-mode-hook 'turn-on-haskell-simple-indent)
+(add-hook 'haskell-mode-hook 'turn-on-haskell-hugs)
+
+;; ###################
+;; ## Adds Python Mode
+;; ###################
+;(setq load-path (cons "~/lib/emacs" load-path))
+(setq auto-mode-alist
+      (cons '("\\.py$" . python-mode) auto-mode-alist))
+(setq interpreter-mode-alist
+      (cons '("python" . python-mode)
+            interpreter-mode-alist))
+(autoload 'python-mode "python-mode" "Python editing mode." t)
+
+;; ####################
+;; ## Adds Prolog Mode
+;; ####################
+;(setq load-path (cons "~/lib/emacs" load-path))
+;(setq auto-mode-alist (append '(("\\.pro$" . prolog-mode)
+;                                ;("\\.pl$" . prolog-mode)
+;                                ("\\.m$" . mercury-mode))
+;                              auto-mode-alist))
+;(autoload 'run-prolog "prolog" "Start a Prolog sub-process." t)
+;(autoload 'prolog-mode "prolog" "Major mode for editing Prolog programs." t)
+;(autoload 'mercury-mode "prolog" "Major mode for editing Mercury programs." t)
+;(setq prolog-system 'swi)
+
+
+;; #######################
+;; ## Adds JavaScript Mode
+;; #######################
+(autoload 'javascript-mode "javascript-mode" "JavaScript mode" t)
+   (setq auto-mode-alist (append '(("\\.js$" . javascript-mode))
+				   auto-mode-alist))
+
+
+;; #######################
+;; ## Adds PHP Mode
+;; #######################
+;(require 'php-mode)
+
+
+;; ===================================================================
+;; == Rust sync highlighting
+;; ===================================================================
+
+(require 'rust-mode)
+
+
+;; ===================================================================
+;; == Auto Insert
+;; ===================================================================
+(require 'autoinsert)
+(auto-insert-mode 1)
+
+(add-to-list
+ 'auto-insert-alist
+ '((c++-mode . "C++ template") .
+   [my-autoinsert-c++-header
+    my-autoinsert-c++-content]))
+
+(add-to-list
+ 'auto-insert-alist
+ '((c-mode . "C template") .
+   [my-autoinsert-c++-header
+    my-autoinsert-c-content]))
+
+(defun my-autoinsert-c++-header ()
+  (insert  "//////////////////////////////////////////////////////////////////////\n"
+           "//\n"
+           "// Filename         : "(file-name-nondirectory buffer-file-name)"\n"
+           "// Author           : "(user-full-name)"\n"
+           "// Created on       : "(format-time-string "%A, %d %B %Y" (current-time))"\n"
+           "// Last Modified on : "(format-time-string "%A, %d %B %Y" (current-time))"\n"
+           "// Version          : 1.00\n"
+           "// Title            : \n"
+           "//\n"
+           "//////////////////////////////////////////////////////////////////////\n"
+           "\n"))
+
+
+(defun my-autoinsert-c-content ()
+  (insert "#include <stdio.h>\n"
+          "\n"
+          "int main(int argc, char *argv[]) {\n"
+          "    printf(\"Hello World\\n\");\n"
+          "    return 0;\n"
+          "}\n"))
+
+
+(defun my-autoinsert-c++-content ()
+  (insert "#include <iostream>\n"
+          "#include <vector>\n"
+          "#include <string>\n"
+          "\n"
+          "using namespace std;\n"
+          "\n"
+          "int main(int argc, char *argv[]) {\n"
+          "    cout << \"Hello World\" << endl;\n"
+          "    return 0;\n"
+          "}\n"))
+
+
+(add-to-list
+ 'auto-insert-alist
+ '((java-mode . "Java template") .
+   [my-autoinsert-java-header]))
+
+(defun my-autoinsert-java-header ()
+  (insert "/**\n"
+          " *\n"
+          " * Filename         : "(file-name-nondirectory buffer-file-name)"\n"
+          " * @author          : "(user-full-name)"\n"
+          " * @since           : "(format-time-string "%A, %d %B %Y" (current-time))"\n"
+          " * Last Modified on : "(format-time-string "%A, %d %B %Y" (current-time))"\n"
+          " * @version         : 1.00\n"
+          " * Title            : \n"
+          " *\n"
+          " **/\n"
+          "\n"))
+
+
+(add-to-list
+ 'auto-insert-alist
+ '((html-mode . "HTML template") .
+   [my-autoinsert-html-header "templates/htmlTemplate.html"]))
+
+(defun my-autoinsert-html-header ()
+  (insert ""))
+
+
+(defun my-autoinsert-latex-content ()
+  (insert "%%============================
+%% LaTeX starts here
+%%============================
+% [twoside, titlepage, openright] {report:book}
+\\documentclass[a4paper,12pt]{article}
+
+%%============================
+%% Preamble starts here
+%%============================
+
+% Standard packages
+\\usepackage{graphicx}
+\\usepackage{longtable}
+%\\usepackage{a4wide}
+\\usepackage{verbatim}
+%\\usepackage{hangul,uhc}
+\\usepackage[%dvips,        % Disable this if pdflatex is used
+            pagebackref,
+            %use this when you want to change the size of output pdf only
+            %pdfpagescrop={53 486 389 754},
+            colorlinks=true,
+            linkcolor=webgreen,
+            filecolor=webbrown,
+            citecolor=webgreen,
+            pdftitle={title},
+            pdfauthor={author},
+            pdfsubject={subject},
+            pdfkeywords={keywords},
+            pdfstartview={FitH},
+            bookmarksopen=false,
+            pdfpagemode=None]{hyperref}
+\\usepackage{color}
+\\usepackage{fancyhdr}
+
+%%============================
+%% Documents starts here
+%%============================
+\\begin{document}
+
+% Document Information
+\\title{}
+\\author{Ryan H. Choi}
+\\date\\today
+
+% PageStyle {headings:empty}
+\\pagestyle{plain}
+
+%Customised colours for the use of hypertext
+%\\definecolor{webgreen}{rgb}{0,.5,0}
+%\\definecolor{webbrown}{rgb}{.6,0,0}
+
+%% Fancy header settings
+%\\lhead{}
+%\\chead{}
+%\\rhead{}
+%\\lfoot{\\font\\tmpfont=pzcmi7t \\tmpfont \\textcolor{blue}{Ryan Choi \\copyright{} \\tmpfont 2001}}
+%\\cfoot{}
+%\\rfoot{\\thepage}
+%\\renewcommand{\\headrulewidth}{0pt}
+
+%\\frontmatter
+\\maketitle
+\\tableofcontents
+
+%\\mainmatter
+\\setlength{\\parindent}{0pt}    % do not indent when a new paragraph starts
+\\setlength{\\parskip}{2ex plus 0.5ex minus 0.2ex} % insert an empty
+                                                 % line between paragraphs
+
+%%============================
+%% Contents starts here
+%%============================
+%\\chapter{}
+
+%\\appendix
+%\\backmatter
+
+
+%%============================
+%% Bibliography starts here
+%%============================
+%\\bibliographystyle{abbrv}
+%\\bibliography{sigproc}
+\\end{document}
+
+
+%% For emacs
+%% Local%Variables:
+%% mode:%latex
+%% TeX-master: t
+%% End:%
+"))
+
+(add-to-list
+ 'auto-insert-alist
+ '((latex-mode . "Latex template") .
+   [my-autoinsert-latex-content]))
+
+
+;; ===================================================================
+;; == Using UTF-8
+;; ===================================================================
+;; (setq locale-coding-system 'utf-8)
+;; (set-terminal-coding-system 'utf-8)
+;; (set-keyboard-coding-system 'utf-8)
+;; (set-selection-coding-system 'utf-8)
+;; (prefer-coding-system 'utf-8)
+
+;; ===================================================================
+;; == Korean Support
+;; ===================================================================
+;; (require 'hangul)
+
+
+(require 'cl)
+(when enable-multibyte-characters
+  (set-language-environment "Korean")
+
+  (setq-default file-name-coding-system 'euc-kr)
+  ;; (setq default-korean-keyboard "3")
+  ;; (setq input-method-verbose-flag nil
+  ;;       input-method-highlight-flag nil)
+  (prefer-coding-system 'euc-kr)
+  (set-default-coding-systems 'euc-kr)
+  (unless window-system
+    (set-terminal-coding-system 'euc-kr)
+    (when (boundp 'encoded-kbd-mode-map)
+      (define-key encoded-kbd-mode-map [27] nil)))
+
+  (set-selection-coding-system 'compound-text-with-extensions)
+
+  ;; Hangul Mail setting
+  (setq-default sendmail-coding-system 'euc-kr))
+(unless (or enable-multibyte-characters window-system)
+  (standard-display-european t)
+  (set-input-mode (car (current-input-mode))
+                  (nth 1 (current-input-mode))
+                  0))
+
+
+
+;; (require 'cl)
+;; (when enable-multibyte-characters
+  ;; (set-language-environment "Korean")
+
+  ;; (setq-default file-name-coding-system 'euc-kr)
+  ;; ;; the following setting is unnecessary from 20.5 >
+  ;; (when (string-match "^3" (or (getenv "HANGUL_KEYBOARD_TYPE") ""))
+    ;; (setq default-korean-keyboard "3"))
+  ;; (setq input-method-verbose-flag nil
+        ;; input-method-highlight-flag nil)
+  ;; (prefer-coding-system 'euc-kr)
+  ;; (set-default-coding-systems 'euc-kr)
+  ;; ;;(setq default-process-coding-system '(euc-kr . euc-kr))
+  ;; (if window-system
+      ;; (global-set-key "\C-\\" 'undefined)
+    ;; (global-set-key "\C-\\" 'toggle-korean-input-method ))
+  ;; (add-hook 'quail-inactivate-hook 'delete-quail-completions)
+  ;; (defun delete-quail-completions ()
+    ;; (when (get-buffer "*Quail Completions*")
+      ;; (kill-buffer "*Quail Completions*")))
+
+  ;; ;; emacs 21 or later, xim is usable
+  ;; (set-keyboard-coding-system 'euc-kr)
+  ;; (when (assq 'encoded-kbd-mode minor-mode-alist)
+    ;; (setf (second (assq 'encoded-kbd-mode minor-mode-alist)) ""))
+
+  ;; (unless window-system
+    ;; (set-terminal-coding-system 'euc-kr)
+    ;; (when (boundp 'encoded-kbd-mode-map)
+      ;; (define-key encoded-kbd-mode-map [27] nil)))
+
+  ;; ;; in case default doesn't work
+  ;; ;;(set-selection-coding-system 'ctext)
+
+  ;; ;; Hangul Mail setting
+  ;; (setq-default sendmail-coding-system 'euc-kr)
+
+  ;; ;; turn off C-h during input -- this code should be invoked after
+  ;; ;; loading quail but before loading specific keymap
+  ;; (require 'quail)
+  ;; (loop for kpair in '(("C-h" . quail-delete-last-char)
+                       ;; ("C-?" . quail-delete-last-char)
+                       ;; ("C-SPC" . set-mark-command)
+                       ;; ("<f1>" . quail-translation-help))
+        ;; do (define-key quail-translation-keymap
+             ;; (read-kbd-macro (car kpair)) (cdr kpair))
+        ;; do (define-key quail-conversion-keymap
+             ;; (read-kbd-macro (car kpair)) (cdr kpair)))
+  ;; (define-key global-map (kbd "C-x RET s") 'decode-coding-region)
+
+  ;; ;; hangul <-> english auto conversion
+  ;; ;;(when window-system (require 'hangul-auto))
+  ;; )
+
+(message ".emacs loaded OK")
+(custom-set-variables
+  ;; custom-set-variables was added by Custom.
+  ;; If you edit it by hand, you could mess it up, so be careful.
+  ;; Your init file should contain only one such instance.
+  ;; If there is more than one, they won't work right.
+ '(preview-gs-options (quote ("-q" "-dNOPAUSE" "-DNOPLATFONTS" "-dPrinted" "-dTextAlphaBits=4" "-dGraphicsAlphaBits=4"))))
+(custom-set-faces
+  ;; custom-set-faces was added by Custom.
+  ;; If you edit it by hand, you could mess it up, so be careful.
+  ;; Your init file should contain only one such instance.
+  ;; If there is more than one, they won't work right.
+ )

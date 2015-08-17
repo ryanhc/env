@@ -1,0 +1,258 @@
+;; http://ergoemacs.org/emacs/emacs_make_modern.html
+
+;; Needs ~/.Xmodmap
+;; On Mac, a command key is sent as a control key on X11
+;; http://www.bohemianalps.com/blog/2008/x11-control2command/
+;; !~/.Xmodmap
+;; clear Mod2
+;; clear control
+;; keycode 63 = Control_L
+;; keycode 67 = Control_L
+;; add control = Control_L
+
+;; ==================================================================
+;; == General Settings
+;; ==================================================================
+
+(add-to-list 'load-path ".emacs.d.new")
+
+;; Enable Cua-mode
+(cua-mode t)
+;; delete seleted text when typing
+(delete-selection-mode 1)
+(setq cua-auto-tabify-rectangles nil) ;; Don't tabify after rectangle commands
+(setq cua-keep-region-after-copy t) ;; Standard Windows behaviour
+
+;; maps commands to control on mac
+(setq mac-command-modifier 'ctrl)
+
+;; make backspace to delete forward
+(global-set-key [(control h)] 'delete-backward-char)
+
+;; To make del work in Linux
+(normal-erase-is-backspace-mode 1)
+
+;; turn on paren match highlighting
+(show-paren-mode 1)
+
+;; display line and column numbers in margin.
+(global-linum-mode 1)
+(column-number-mode 1)
+
+;; Do not truncate lines
+(set-default 'truncate-lines t)
+;(global-visual-line-mode 1) ;;word wrap by word. 1 for on, 0 for off. Must be off when truncate lines is disabled
+
+;; make searches case insensitive
+(setq case-fold-search nil)
+
+;; Use 4 spaces for indentation
+(setq-default indent-tabs-mode nil) ; use space only (never tab character)
+(setq-default tab-width 4) ; set default tab char's display width to 4 spaces
+(setq tab-width 8) ; set current buffer's tab width to 8 spaces
+
+;; No backup
+(setq make-backup-files nil) ;;stop creating backup~ files
+(setq auto-save-default nil) ;;stop creating #autosave# files
+
+;; Make all "yes or no" to "y or n" instead
+(fset 'yes-or-no-p 'y-or-n-p)
+
+;; X11 copy & paste to/from emacs
+;; http://emacswiki.org/emacs/CopyAndPaste
+(setq x-select-enable-primary t)
+(setq x-select-enable-clipboard t)
+
+;;Disable the cursed startup message
+(setq inhibit-startup-message t)
+(setq initial-scratch-message nil);Same for the message in the scratch buffer
+
+(tool-bar-mode -1)                ;The tool bar is useless
+
+;; ===================================================================
+;; == Highlighting
+;; ===================================================================
+(setq show-paren-delay 0.6)               ;I can wait for 0.6 seconds
+(setq show-paren-ring-bell-on-mismatch t) ;I like to make a noise
+(show-paren-mode t)                       ;matching parentheses
+
+;; highlight during query
+(setq query-replace-highlight t)
+
+;; highlight incremental search
+(setq search-highlight t)
+
+;; highlight current line
+;(global-hl-line-mode 1)
+
+;; ===================================================================
+;; == Keyword highlighting for words such as FIXME, TODO
+;; ===================================================================
+(setq keyword-highlight-modes
+      '(php-mode java-mode c-mode c++-mode emacs-lisp-mode
+                 scheme-mode python-mode javascript-mode))
+
+(make-face 'font-lock-fixme-face)
+(make-face 'font-lock-todo-face)
+(make-face 'font-lock-note-face)
+
+(mapc (lambda (mode)
+        (font-lock-add-keywords
+         mode
+         '(("\\<\\(FIXME\\)" 1 'font-lock-fixme-face t))))
+      keyword-highlight-modes)
+
+(mapc (lambda (mode)
+        (font-lock-add-keywords
+         mode
+         '(("\\<\\(TODO\\)" 1 'font-lock-todo-face t))))
+      keyword-highlight-modes)
+
+(mapc (lambda (mode)
+        (font-lock-add-keywords
+         mode
+         '(("\\<\\(NOTE\\)" 1 'font-lock-note-face t))))
+      keyword-highlight-modes)
+
+
+
+(modify-face 'font-lock-fixme-face "black" "yellow" nil t nil t nil nil)
+(modify-face 'font-lock-todo-face "black" "yellow" nil t nil nil nil nil)
+(modify-face 'font-lock-note-face "black" "yellow" nil t nil nil nil nil)
+
+
+;; ===================================================================
+;; == Spell checking
+;; ===================================================================
+(autoload 'flyspell-mode "flyspell" "On-the-fly spelling checking" t)
+(autoload 'global-flyspell-mode "flyspell" "On-the-fly spelling" t)
+
+
+
+;; ===================================================================
+;; == Key Bindings
+;; ===================================================================
+
+(global-set-key [f1] 'goto-line) ;goto line
+(global-set-key [f5] 'compile)   ;compile
+(global-set-key [f7] 'flyspell-mode)   ;on the fly spell checking
+(global-set-key [(meta f7)] 'ispell)   ;sequential spell checking
+
+;(global-set-key [(meta g)] 'goto-line)
+;(define-key c-mode-map [(f5)] 'compile)
+
+
+;; put back my keys, you thief!
+(global-set-key [home] 'beginning-of-line)
+(global-set-key [end] 'end-of-line)
+
+(global-set-key [C-home] 'beginning-of-buffer)
+(global-set-key [C-end] 'end-of-buffer)
+(global-set-key [C-tab] 'indent-using-tab)
+
+;; Shift-down comments the current line and goes down
+(define-key global-map [(meta down)] 'comment-and-go-down)
+;; Shift-up uncomments the current line and goes up
+(define-key global-map [(meta up)] 'uncomment-and-go-up)
+
+(define-key global-map [?\C-x right] 'next-buffer)
+(define-key global-map [?\C-x left] 'prev-buffer)
+
+;; ===================================================================
+;; == Useful Functions
+;; ===================================================================
+
+;; I like to remove trailing whitespaces when I save a file
+(add-hook 'write-file-hooks 'global-trim)
+
+;; removes all trailing whitespaces
+(defun global-trim ()
+  "Trim all trailing whitespace in the current buffer."
+  (interactive)
+  (save-excursion
+    (goto-char (point-min))
+    (while (re-search-forward "[ \t]+$" nil t)
+      (replace-match "" t t))))
+
+;;ASCII table function
+(defun ascii-table ()
+  "Print the ascii table. Based on a defun by Alex Schroeder <asc@bsiag.com>"
+  (interactive)  (switch-to-buffer "*ASCII*")  (erase-buffer)
+  (insert (format "ASCII characters up to number %d.\n" 254))
+  (let ((i 0))
+    (while (< i 254)
+      (setq i (+ i 1))
+      (insert (format "%4d %c\n" i i))))
+  (beginning-of-buffer))
+
+;; Removes tab with " "
+(defun tab-to-space ()
+  (interactive)
+  (goto-char (point-min))
+  (while (search-forward "\t" nil t)
+    (replace-match " ")))
+
+
+;;Convert DOS cr-lf to UNIX newline
+(defun dos-unix ()
+  (interactive)
+  (goto-char (point-min))
+  (while (search-forward "\r" nil t)
+    (replace-match "")))
+
+;;Convert UNIX newline to DOS cr-lf
+(defun unix-dos ()
+  (interactive)
+  (goto-char (point-min))
+  (while (search-forward "\n" nil t)
+    (replace-match "\r\n")))
+
+;; inserts a \t character
+(defun indent-using-tab ()
+   "Indent using a tab"
+   (interactive)
+;   (beginning-of-line)
+   (insert "\t")
+)
+
+;; Those functions exist in 21.3.5 by default
+(defun next-buffer ()
+      "Switch to the next buffer in cyclic order."
+      (interactive)
+      (let ((buffer (current-buffer)))
+        (switch-to-buffer (other-buffer buffer))
+        (bury-buffer buffer)))
+
+(defun prev-buffer ()
+      "Switch to the previous buffer in cyclic order."
+      (interactive)
+      (let ((list (nreverse (buffer-list)))
+            found)
+        (while (and (not found) list)
+          (let ((buffer (car list)))
+            (if (and (not (get-buffer-window buffer))
+                     (not (string-match "\\` " (buffer-name buffer))))
+                (setq found buffer)))
+          (setq list (cdr list)))
+        (switch-to-buffer found)))
+
+
+(defun comment-and-go-down ()
+  "Comments the current line and goes to the next one"
+  (interactive)
+  (condition-case nil
+      (comment-region
+       (point-at-bol)
+       (point-at-eol))
+    (error nil))
+  (next-line 1))
+
+(defun uncomment-and-go-up ()
+  "Uncomments the current line and goes to the previous one" (interactive)
+  (condition-case nil
+      (uncomment-region
+       (point-at-bol)
+       (point-at-eol))
+    (error nil))
+  (next-line -1))
+
