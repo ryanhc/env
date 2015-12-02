@@ -1,0 +1,5 @@
+[
+    { "keys": ["f3"], "command": "goto_definition" },
+    { "keys": ["tab"], "command": "reindent"},
+    { "keys": ["f5"], "command": "revert"}
+]
