@@ -3,6 +3,7 @@ syntax on
 set encoding=utf-8
 filetype plugin indent on
 set autoindent
+set smartindent
 set number
 set colorcolumn=80
 set laststatus=2
@@ -14,7 +15,7 @@ inoremap jk <ESC>
 set whichwrap+=<,>,h,l,[,]
 
 " tab
-set smarttab
+"set smarttab
 set tabstop=4 shiftwidth=4 expandtab
 inoremap <TAB> <C-f>
 
@@ -26,10 +27,10 @@ set hlsearch
 :nnoremap <silent> <Space> :nohlsearch<Bar>:echo<CR>
 
 " control
-inoremap <C-h> <C-w>h
-inoremap <C-j> <C-w>j
-inoremap <C-k> <C-w>k
-inoremap <C-l> <C-w>l
+nnoremap <C-h> <C-w>h
+nnoremap <C-j> <C-w>j
+nnoremap <C-k> <C-w>k
+nnoremap <C-l> <C-w>l
 
 " spellchecking
 " set spell spellang=en_us
@@ -40,3 +41,25 @@ set guicursor=n-v-c:block-Cursor
 set guicursor+=i:ver100-iCursor
 set guicursor+=n-v-c:blinkon0
 set guicursor+=i:blinkwait10
+
+" tags
+function! DelTagOfFile(file)
+  let fullpath = a:file
+  let cwd = getcwd()
+  let tagfilename = cwd . "/tags"
+  let f = substitute(fullpath, cwd . "/", "", "")
+  let f = escape(f, './')
+  let cmd = 'sed -i "/' . f . '/d" "' . tagfilename . '"'
+  let resp = system(cmd)
+endfunction
+
+function! UpdateTags()
+    let f = expand("%:p")
+    let cwd = getcwd()
+    let tagfilename = cwd . "/tags"
+    let cmd = 'ctags -a -f ' . tagfilename . ' --c++-kinds=+p --fields=+iaS --extra=+q ' . '"' . f . '"'
+    call DelTagOfFile(f)
+    let resp = system(cmd)
+endfunction
+autocmd BufWritePost *.cpp,*.h,*.c call UpdateTags()
+set tags=./tags;/
