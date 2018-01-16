@@ -1,7 +1,7 @@
 {
 	"auto_match_enabled": false,
 	"detect_identation": false,
-	"font_size": 14,
+	"font_size": 10,
 	"highlight_line": true,
 	"hot_exit": true,
 	"ignored_packages":
