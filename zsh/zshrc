@@ -60,7 +60,7 @@ ZSH_THEME="robbyrussell"
 # Add wisely, as too many plugins slow down shell startup.
 
 plugins=(
-  gitfast
+  gitfast-noalias
   colored-man-pages
   zsh-syntax-highlighting
   zsh-autosuggestions
@@ -110,7 +110,7 @@ prompt pure
 # Remove duplicates in the history
 setopt hist_ignore_all_dups
 # Case sensitive tab completion
-CASE_SENSITIVE="true"
+#CASE_SENSITIVE="true"
 
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
 
