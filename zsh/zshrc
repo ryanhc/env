@@ -60,7 +60,8 @@ ZSH_THEME="robbyrussell"
 # Add wisely, as too many plugins slow down shell startup.
 
 plugins=(
-  gitfast-noalias
+  #gitfast-noalias
+  gitfast
   colored-man-pages
   zsh-syntax-highlighting
   zsh-autosuggestions

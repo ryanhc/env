@@ -32,6 +32,20 @@ nnoremap <C-j> <C-w>j
 nnoremap <C-k> <C-w>k
 nnoremap <C-l> <C-w>l
 
+" reset the leader key
+let mapleader = ","
+let g:mapleader = ","
+
+" d => delete; leader d => cut
+nnoremap x "_x
+nnoremap d "_d
+nnoremap D "_D
+vnoremap d "_d
+
+nnoremap <leader>d ""d
+nnoremap <leader>D ""D
+vnoremap <leader>d ""d
+
 " spellchecking
 " set spell spellang=en_us
 
@@ -61,6 +75,6 @@ function! UpdateTags()
     call DelTagOfFile(f)
     let resp = system(cmd)
 endfunction
-autocmd BufWritePost *.cpp,*.h,*.c call UpdateTags()
-set tags=./tags;/
+" autocmd BufWritePost *.cpp,*.h,*.c call UpdateTags()
+" set tags=./tags;/
 
